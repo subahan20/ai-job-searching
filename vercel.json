@@ -2,11 +2,12 @@
   "crons": [
     {
       "path": "/api/search?role=React%20Developer&skills=React,TypeScript,JavaScript&experience=2",
-      "schedule": "0 * * * *"
+      "schedule": "0 0 * * *"
     },
     {
       "path": "/api/search?role=Frontend%20Engineer&skills=HTML,CSS,JavaScript,React&experience=1",
-      "schedule": "30 * * * *"
+      "schedule": "0 12 * * *"
     }
   ]
 }
+
