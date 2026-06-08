@@ -3,8 +3,9 @@
 import React from 'react';
 
 // EmptyState component to render uniform error, initial landing, or empty result sets
-export default function EmptyState({ type = 'ready', message = '' }) {
+export default function EmptyState({ type = 'ready', message = '', title = '' }) {
   if (type === 'error') {
+    const displayTitle = title || (message.includes('No jobs found') ? 'No Jobs Found' : 'Search Pipeline Error');
     return (
       <div className="bg-red-950/20 border border-red-800/40 rounded-xl p-6 mb-6 flex items-start gap-4 shadow-lg backdrop-blur-sm relative overflow-hidden group">
         <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-2xl pointer-events-none" />
@@ -14,16 +15,16 @@ export default function EmptyState({ type = 'ready', message = '' }) {
           </svg>
         </div>
         <div className="flex-1">
-          <h3 className="text-sm font-bold text-red-300 mb-1">AI Scoring Engine Offline</h3>
+          <h3 className="text-sm font-bold text-red-300 mb-1">{displayTitle}</h3>
           <p className="text-xs text-zinc-400 leading-relaxed">
-            {message || 'Groq connection failed or key has expired. Please verify environment keys.'}
+            {message || 'An unexpected error occurred during the search. Please verify backend configurations.'}
           </p>
           <div className="mt-3 flex gap-2">
             <span className="text-[10px] bg-red-950/50 text-red-400 border border-red-900/30 px-2 py-0.5 rounded font-mono font-semibold">
-              STATUS: ERROR
+              STATUS: FAILED
             </span>
             <span className="text-[10px] bg-zinc-900 text-zinc-400 border border-zinc-800 px-2 py-0.5 rounded font-mono">
-              Groq Llama 3 Required
+              Search Engine
             </span>
           </div>
         </div>

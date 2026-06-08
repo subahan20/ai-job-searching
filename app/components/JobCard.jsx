@@ -19,7 +19,8 @@ export default function JobCard({ result, onApplyClick }) {
     experienceLevel = 'Entry Level',
     url = '#',
     logoUrl = '',
-    logoColor = 'bg-blue-600'
+    logoColor = 'bg-blue-600',
+    skillsRequired = []
   } = job;
 
   return (
@@ -73,24 +74,35 @@ export default function JobCard({ result, onApplyClick }) {
         </div>
 
         {/* Job Description snippet */}
-        <p className="text-xs text-zinc-300 leading-relaxed font-normal">
-          {description}
-        </p>
+        <div
+          className="text-xs text-zinc-300 leading-relaxed font-normal [&_p]:mb-1 [&_br]:block [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:pl-4 [&_li]:mb-0.5"
+          dangerouslySetInnerHTML={{ __html: description }}
+        />
 
         {/* Skill matching tags */}
         <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-zinc-800/50 mt-1">
           <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mr-1">Skills:</span>
-          {matchedSkills.map((skill, idx) => (
-            <span key={idx} className="text-[10px] font-medium bg-emerald-950/30 text-emerald-400 border border-emerald-900/20 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-              <span className="w-1 h-1 rounded-full bg-emerald-400" />
-              {skill}
-            </span>
-          ))}
-          {missingSkills.slice(0, 3).map((skill, idx) => (
-            <span key={idx} className="text-[10px] font-medium bg-zinc-950 text-zinc-500 border border-zinc-800 px-2.5 py-0.5 rounded-full line-through decoration-zinc-700/50">
-              {skill}
-            </span>
-          ))}
+          {matchedSkills.length > 0 || missingSkills.length > 0 ? (
+            <>
+              {matchedSkills.map((skill, idx) => (
+                <span key={idx} className="text-[10px] font-medium bg-emerald-950/30 text-emerald-400 border border-emerald-900/20 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                  <span className="w-1 h-1 rounded-full bg-emerald-400" />
+                  {skill}
+                </span>
+              ))}
+              {missingSkills.slice(0, 3).map((skill, idx) => (
+                <span key={idx} className="text-[10px] font-medium bg-zinc-950 text-zinc-500 border border-zinc-800 px-2.5 py-0.5 rounded-full line-through decoration-zinc-700/50">
+                  {skill}
+                </span>
+              ))}
+            </>
+          ) : (
+            skillsRequired.map((skill, idx) => (
+              <span key={idx} className="text-[10px] font-medium bg-[#2f353e]/40 text-zinc-300 border border-[#2f353e]/70 px-2.5 py-0.5 rounded-full">
+                {skill}
+              </span>
+            ))
+          )}
         </div>
 
         {/* Action Links */}

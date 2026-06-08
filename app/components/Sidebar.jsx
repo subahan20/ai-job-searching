@@ -16,7 +16,7 @@ export default function Sidebar({ user = null, onLogOut = null }) {
         </div>
         <div>
           <span className="text-sm font-black tracking-tight text-white block">
-            myapp
+            ai jobs
           </span>
           <span className="text-[9px] text-zinc-500 font-semibold block leading-none">
             JobSync Client Portal
@@ -34,11 +34,11 @@ export default function Sidebar({ user = null, onLogOut = null }) {
               : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200 border border-transparent'
           }`}
         >
-          {/* Home Icon */}
+          {/* Sparkles / AI Icon */}
           <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 3l1.5 4.5L11 9l-4.5 1.5L5 15l-1.5-4.5L-1 9l4.5-1.5L5 3zm13 9l1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3zm-5-6l.75 2.25L16 10l-2.25.75L13 13l-.75-2.25L10 10l2.25-.75L13 6z" />
           </svg>
-          <span>myapp</span>
+          <span>ai jobs</span>
         </Link>
 
         <Link
@@ -49,11 +49,11 @@ export default function Sidebar({ user = null, onLogOut = null }) {
               : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200 border border-transparent'
           }`}
         >
-          {/* Briefcase Icon */}
+          {/* Layout Grid Icon */}
           <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
           </svg>
-          <span>all jobs</span>
+          <span>my app</span>
         </Link>
       </nav>
 

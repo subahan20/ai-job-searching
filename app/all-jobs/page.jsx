@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
 import DashboardLayout from '../components/DashboardLayout';
 import JobCard from '../components/JobCard';
 import ApplyModal from '../components/ApplyModal';
@@ -15,29 +14,31 @@ export default function AllJobs() {
   const fetchAllJobs = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('jobs')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || (process.env.NODE_ENV === 'development' ? 'http://localhost:5000/api' : 'https://ai-jobs-back.onrender.com/api');
+      
+      const res = await fetch(`${backendUrl}/jobs?limit=100`);
+      if (!res.ok) throw new Error(`Backend returned status code ${res.status}`);
+      const result = await res.json();
+      const rawJobs = result.jobs || [];
 
-      if (error) throw error;
-
-      const mapped = (data || []).map(row => ({
-        id: row.id,
-        title: row.title,
-        company: row.company,
-        logoUrl: row.logo_url || undefined,
-        logoColor: row.logo_color || 'bg-blue-600 text-white',
-        source: row.source || 'Admin Portal',
-        experienceLevel: row.experience_level || 'Mid',
-        minExperienceYears: row.min_experience_years || 0,
-        skillsRequired: row.skills_required || [],
-        salary: row.salary || 'Not Disclosed',
-        location: row.location || 'Remote',
-        description: row.description || '',
-        postedTime: row.posted_time || 'Active',
-        url: row.url || ''
-      }));
+      const mapped = rawJobs
+        .filter(row => row.source === 'Admin Portal')
+        .map(row => ({
+          id: row.id,
+          title: row.title,
+          company: row.company,
+          logoUrl: row.logo_url || undefined,
+          logoColor: row.logo_color || 'bg-blue-600 text-white',
+          source: row.source || 'Admin Portal',
+          experienceLevel: row.experience_level || 'Mid',
+          minExperienceYears: row.min_experience_years || 0,
+          skillsRequired: row.skills_required || [],
+          salary: row.salary || 'Not Disclosed',
+          location: row.location || 'Remote',
+          description: row.description || '',
+          postedTime: row.posted_time || 'Active',
+          url: row.url || ''
+        }));
 
       setJobs(mapped);
     } catch (err) {
@@ -69,7 +70,7 @@ export default function AllJobs() {
         <div className="flex items-center gap-2">
           <span className="text-xs font-bold text-zinc-500">myapp</span>
           <span className="text-xs text-zinc-700">/</span>
-          <span className="text-xs text-zinc-200 font-semibold">all jobs</span>
+          <span className="text-xs text-zinc-200 font-semibold">my app jobs</span>
         </div>
         <button 
           onClick={fetchAllJobs}
@@ -89,8 +90,8 @@ export default function AllJobs() {
         {/* Page title and description */}
         <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-4 pb-4 border-b border-zinc-800/60">
           <div>
-            <h1 className="text-xl font-black text-white tracking-tight">All Database Listings</h1>
-            <p className="text-xs text-zinc-500 mt-1">Displays manual jobs from the Admin Portal and synced scraper listings.</p>
+            <h1 className="text-xl font-black text-white tracking-tight">My App Listings</h1>
+            <p className="text-xs text-zinc-500 mt-1">Displays job listings published directly through the admin dashboard portal.</p>
           </div>
           <span className="text-[10px] text-zinc-400 font-bold font-mono bg-[#1d2226] border border-[#2f353e] px-3 py-1 rounded-full self-start">
             Total {filteredJobs.length} active listings

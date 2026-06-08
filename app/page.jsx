@@ -50,11 +50,8 @@ export default function Home() {
       matchExplanation: job?.matchExplanation || ''
     }));
 
-    // Filter results strictly to listings that share at least one skill, if skills filter was supplied
-    if (userSkills.length > 0) {
-      return results.filter(r => r.matchedSkills.length > 0);
-    }
-    return results;
+    // Sort results by match score descending so best matches appear first
+    return [...results].sort((a, b) => (b.score || 0) - (a.score || 0));
   }, [jobs, searchCriteria]);
 
   // Handle new search initiation
@@ -67,7 +64,7 @@ export default function Home() {
       {/* Top Status Header */}
       <header className="border-b border-zinc-900 bg-zinc-900/40 backdrop-blur-md py-4 px-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-zinc-500">myapp</span>
+          <span className="text-xs font-bold text-zinc-500">ai jobs</span>
           <span className="text-xs text-zinc-700">/</span>
           <span className="text-xs text-zinc-200 font-semibold">Search Feed</span>
         </div>
@@ -88,11 +85,9 @@ export default function Home() {
         {/* Right Column: Search Results Feed */}
         <div className="flex-1 w-full min-h-[400px]">
           
-          {/* Display offline scoring warnings if there are any errors */}
-          {error && <EmptyState type="error" message={error} />}
-
-          {/* Show crawling logs and progress slider while actively searching */}
-          {isSearching ? (
+          {error ? (
+            <EmptyState type="error" message={error} />
+          ) : isSearching ? (
             <SearchingState 
               searchProgress={searchProgress} 
               searchLogs={searchLogs} 
