@@ -1,8 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import jobsReducer from './jobsSlice';
+import aiSearchReducer from './aiSearchSlice';
+import profileReducer from './profileSlice';
 
 export const store = configureStore({
   reducer: {
-    jobs: jobsReducer
-  }
+    profile: profileReducer,
+    aiSearch: aiSearchReducer,
+  },
 });

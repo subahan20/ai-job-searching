@@ -3,133 +3,132 @@
 import React from 'react';
 import CompanyLogo from './CompanyLogo';
 
-// JobCard component to display a single matching job listing
 export default function JobCard({ result, onApplyClick }) {
-  // Destructure with default values and optional chaining
   const { job = {}, score = 0, matchedSkills = [], missingSkills = [] } = result || {};
   const {
-    id = '',
-    title = 'Job Title',
-    company = 'Company Name',
-    location = 'Location',
-    postedTime = 'Just posted',
-    source = 'LinkedIn',
-    description = '',
-    minExperienceYears = 0,
-    experienceLevel = 'Entry Level',
-    url = '#',
-    logoUrl = '',
-    logoColor = 'bg-blue-600',
-    skillsRequired = []
+    title,
+    company,
+    location,
+    postedTime,
+    source,
+    description,
+    logoUrl,
+    logoColor,
+    skillsRequired = [],
+    url,
   } = job;
 
+  const displaySkills =
+    matchedSkills.length > 0 || missingSkills.length > 0
+      ? { matched: matchedSkills, missing: missingSkills }
+      : { matched: skillsRequired, missing: [] };
+
+  const hasSkills = displaySkills.matched.length > 0 || displaySkills.missing.length > 0;
+
   return (
-    <div className="bg-[#1d2226] border border-[#2f353e] hover:border-blue-500/50 rounded-xl p-5 flex flex-col md:flex-row gap-4 transition-all duration-300 shadow-md group relative overflow-hidden">
-      
-      {/* Left: Company Logo */}
-      <div className="shrink-0">
-        <CompanyLogo 
-          logoUrl={logoUrl}
-          company={company}
-          logoColor={logoColor}
-        />
-      </div>
-
-      {/* Right: Content details */}
-      <div className="flex-1 min-w-0 flex flex-col gap-2">
-        <div className="flex justify-between items-start gap-4">
-          <div className="min-w-0">
-            <h3 className="text-base font-bold text-white group-hover:text-blue-400 transition-colors">
-              {title}
-            </h3>
-            <p className="text-xs text-blue-400 font-semibold mt-0.5 hover:underline cursor-pointer">
-              {company}
-            </p>
-            <p className="text-xs text-zinc-400 mt-1 flex items-center gap-1.5">
-              <span>{location}</span>
-              <span className="text-zinc-600">•</span>
-              <span>{postedTime}</span>
-            </p>
-          </div>
-
-          {/* Platform Badge & Match Score */}
-          <div className="flex flex-col items-end gap-1.5 shrink-0">
-            <span className={`text-[9px] font-black px-2.5 py-0.5 rounded-full border tracking-wide uppercase ${
-              source === 'LinkedIn' 
-                ? 'bg-blue-900/20 text-blue-400 border-blue-800/30' 
-                : 'bg-red-950/20 text-red-400 border-red-900/30'
-            }`}>
+    <div className="bg-white border border-zinc-200/80 hover:shadow-md rounded-2xl p-5 flex flex-col gap-4 transition-all duration-300 relative font-sans">
+      <div className="flex items-start justify-between">
+        <div className="shrink-0">
+          <CompanyLogo logoUrl={logoUrl} company={company} logoColor={logoColor} />
+        </div>
+        <div className="flex items-center gap-1.5 shrink-0">
+          {source && (
+            <span
+              className={`text-[9px] font-bold px-2 py-0.5 rounded-full border tracking-wide uppercase ${
+                source === 'LinkedIn'
+                  ? 'bg-blue-50 text-blue-700 border-blue-100'
+                  : source === 'Naukri'
+                  ? 'bg-red-50 text-red-700 border-red-100'
+                  : source === 'Indeed'
+                  ? 'bg-sky-50 text-sky-700 border-sky-100'
+                  : 'bg-zinc-50 text-zinc-600 border-zinc-200'
+              }`}
+            >
               {source}
             </span>
-            <div className={`text-[10px] font-black font-mono px-2 py-0.5 rounded border ${
-              score >= 80 
-                ? 'text-emerald-400 border-emerald-500/20 bg-emerald-950/20'
-                : score >= 50
-                ? 'text-amber-400 border-amber-500/20 bg-amber-950/20'
-                : 'text-zinc-400 border-zinc-700/20 bg-zinc-900/20'
-            }`}>
+          )}
+          {score > 0 && (
+            <div className="text-[9px] font-extrabold font-mono px-2 py-0.5 rounded border border-emerald-150 bg-emerald-50/50 text-[#008738]">
               {score}% Match
             </div>
-          </div>
-        </div>
-
-        {/* Job Description snippet */}
-        <div
-          className="text-xs text-zinc-300 leading-relaxed font-normal [&_p]:mb-1 [&_br]:block [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:pl-4 [&_li]:mb-0.5"
-          dangerouslySetInnerHTML={{ __html: description }}
-        />
-
-        {/* Skill matching tags */}
-        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-zinc-800/50 mt-1">
-          <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mr-1">Skills:</span>
-          {matchedSkills.length > 0 || missingSkills.length > 0 ? (
-            <>
-              {matchedSkills.map((skill, idx) => (
-                <span key={idx} className="text-[10px] font-medium bg-emerald-950/30 text-emerald-400 border border-emerald-900/20 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                  <span className="w-1 h-1 rounded-full bg-emerald-400" />
-                  {skill}
-                </span>
-              ))}
-              {missingSkills.slice(0, 3).map((skill, idx) => (
-                <span key={idx} className="text-[10px] font-medium bg-zinc-950 text-zinc-500 border border-zinc-800 px-2.5 py-0.5 rounded-full line-through decoration-zinc-700/50">
-                  {skill}
-                </span>
-              ))}
-            </>
-          ) : (
-            skillsRequired.map((skill, idx) => (
-              <span key={idx} className="text-[10px] font-medium bg-[#2f353e]/40 text-zinc-300 border border-[#2f353e]/70 px-2.5 py-0.5 rounded-full">
-                {skill}
-              </span>
-            ))
           )}
         </div>
+      </div>
 
-        {/* Action Links */}
-        <div className="flex justify-between items-center mt-3 pt-2 border-t border-zinc-800/50">
-          <span className="text-[10px] text-zinc-500 font-bold font-mono">
-            Req Exp: {minExperienceYears}+ yrs ({experienceLevel})
-          </span>
-          <div className="flex gap-2">
-            {url && url !== '#' && source !== 'Admin Portal' && (
-              <a 
-                href={url} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="text-[11px] font-bold px-3 py-1.5 rounded-full border border-[#2f353e] hover:border-zinc-400 transition-all text-zinc-300"
-              >
-                View on {source}
-              </a>
-            )}
-            <button 
-              onClick={() => onApplyClick(job)}
-              className="text-[11px] font-bold px-4 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white transition-all cursor-pointer"
+      <div>
+        {title && <h3 className="text-[15px] font-black text-zinc-900 leading-tight">{title}</h3>}
+        {company && <p className="text-[11px] text-[#008738] font-bold mt-0.5">{company}</p>}
+        {(location || postedTime) && (
+          <p className="text-[11px] text-zinc-400 font-semibold mt-1 flex items-center gap-1.5">
+            {location && <span>{location}</span>}
+            {location && postedTime && <span className="text-zinc-300">•</span>}
+            {postedTime && <span>{postedTime}</span>}
+          </p>
+        )}
+      </div>
+
+      {description && (
+        <div
+          className="text-[11px] text-zinc-500 leading-relaxed font-semibold line-clamp-3 [&_p]:mb-1 [&_br]:block [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:pl-4 [&_li]:mb-0.5"
+          dangerouslySetInnerHTML={{ __html: description }}
+        />
+      )}
+
+      {hasSkills && (
+        <div className="flex flex-wrap items-center gap-1.5 pt-3 border-t border-zinc-100">
+          <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mr-1">Skills:</span>
+          {displaySkills.matched.map((skill, idx) => (
+            <span
+              key={`m-${idx}`}
+              className="text-[10px] font-bold bg-emerald-50 text-[#008738] border border-emerald-100 px-2 py-0.5 rounded-full flex items-center gap-1"
             >
-              Easy Apply
-            </button>
-          </div>
+              <span className="w-1 h-1 rounded-full bg-[#008738]" />
+              {skill}
+            </span>
+          ))}
+          {displaySkills.missing.slice(0, 3).map((skill, idx) => (
+            <span
+              key={`x-${idx}`}
+              className="text-[10px] font-bold bg-zinc-50 text-zinc-400 border border-zinc-200 px-2 py-0.5 rounded-full line-through decoration-zinc-300"
+            >
+              {skill}
+            </span>
+          ))}
         </div>
+      )}
 
+      <div className="w-full h-[1px] bg-zinc-100 mt-1" />
+
+      <div className="flex items-center justify-between pt-1">
+        {url ? (
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[12px] font-extrabold text-[#008738] hover:text-[#00702e] transition-colors"
+          >
+            View Details
+          </a>
+        ) : (
+          <span className="text-[12px] text-zinc-400 font-semibold">No link available</span>
+        )}
+        {url ? (
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[12px] font-bold text-white bg-[#008738] hover:bg-[#00702e] rounded-lg px-6 py-2 transition-colors shadow-sm shadow-[#008738]/20 inline-block text-center"
+          >
+            Apply
+          </a>
+        ) : (
+          <button
+            disabled
+            className="text-[12px] font-bold text-white bg-[#008738] disabled:opacity-40 disabled:cursor-not-allowed rounded-lg px-6 py-2 shadow-sm shadow-[#008738]/20"
+          >
+            Apply
+          </button>
+        )}
       </div>
     </div>
   );

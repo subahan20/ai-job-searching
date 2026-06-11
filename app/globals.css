@@ -1,57 +1,56 @@
 @import "tailwindcss";
 
 :root {
-  --background: #09090b;
-  --foreground: #f4f4f5;
+  --background: #f8f9fc;
+  --foreground: #18181b;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-plus-jakarta);
   --font-mono: var(--font-geist-mono);
 }
 
-body {
+html, body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Modern Custom Scrollbars */
+/* ── Scrollbars (light theme) ────────────────────────────────────── */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #2f353e transparent;
+  scrollbar-color: #d4d4d8 transparent;
 }
 
-/* Chrome, Safari, Edge scrollbars */
-.overflow-y-auto::-webkit-scrollbar,
-.overflow-x-auto::-webkit-scrollbar,
-.overflow-auto::-webkit-scrollbar,
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
-.overflow-y-auto::-webkit-scrollbar-track,
-.overflow-x-auto::-webkit-scrollbar-track,
-.overflow-auto::-webkit-scrollbar-track,
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.overflow-y-auto::-webkit-scrollbar-thumb,
-.overflow-x-auto::-webkit-scrollbar-thumb,
-.overflow-auto::-webkit-scrollbar-thumb,
 ::-webkit-scrollbar-thumb {
-  background: #2f353e;
+  background: #d4d4d8;
   border-radius: 10px;
 }
 
-.overflow-y-auto::-webkit-scrollbar-thumb:hover,
-.overflow-x-auto::-webkit-scrollbar-thumb:hover,
-.overflow-auto::-webkit-scrollbar-thumb:hover,
 ::-webkit-scrollbar-thumb:hover {
-  background: #3b82f6;
+  background: #a1a1aa;
 }
 
+/* Auth card — scrollable form area with hidden scrollbar */
+.auth-scroll-hidden {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.auth-scroll-hidden::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
