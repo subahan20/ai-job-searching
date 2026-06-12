@@ -2,15 +2,11 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { BACKEND_URL } from '../config/api';
-import { getAuthHeaders } from '../lib/authHeaders';
-import { mapAiSearchResponse } from '../lib/mapAiSearchJob';
 import { mapJobRow } from '../lib/mapJobRow';
-import { mergeJobLists } from '../lib/mergeJobLists';
 import { filterRecentJobs } from '../lib/filterRecentJobs';
 
 const JOBS_ENDPOINT = `${BACKEND_URL}/jobs`;
-const AI_SEARCH_ENDPOINT = `${BACKEND_URL}/ai-search`;
-const FETCH_LIMIT = 500;
+const FETCH_LIMIT = 1000;
 
 const sortJobs = (jobs, sortBy) =>
   [...jobs].sort((a, b) =>
@@ -29,21 +25,6 @@ async function fetchJobsFromApi() {
   return Array.isArray(data?.jobs) ? data.jobs.map(mapJobRow) : [];
 }
 
-async function fetchAiSearchFromApi() {
-  const headers = await getAuthHeaders();
-  const res = await fetch(AI_SEARCH_ENDPOINT, { headers });
-  const data = await res.json();
-
-  if (!res.ok || !data?.success) {
-    return [];
-  }
-
-  return mapAiSearchResponse(data).jobs.map((job) => ({
-    ...job,
-    publishState: 'Published',
-  }));
-}
-
 export function useAllJobsBrowse({ sortBy = 'latest' } = {}) {
   const [jobs, setJobs] = useState([]);
   const [adminCount, setAdminCount] = useState(0);
@@ -59,18 +40,22 @@ export function useAllJobsBrowse({ sortBy = 'latest' } = {}) {
       setError(null);
 
       try {
-        const [adminJobs, aiJobs] = await Promise.all([
-          fetchJobsFromApi(),
-          fetchAiSearchFromApi(),
-        ]);
+        const allJobs = await fetchJobsFromApi();
 
-        const publishedAdminJobs = adminJobs.filter((job) => job.publishState !== 'Draft');
-        const merged = filterRecentJobs(mergeJobLists(publishedAdminJobs, aiJobs));
+        const publishedJobs = allJobs.filter((job) => job.publishState !== 'Draft');
+        const recentJobs = filterRecentJobs(publishedJobs);
+
+        // Separate Admin jobs from Scraped jobs to ensure Admin jobs always appear first
+        const adminJobs = recentJobs.filter(job => job.source === 'Admin Portal' || job.source === 'Admin');
+        const scrapedJobs = recentJobs.filter(job => job.source !== 'Admin Portal' && job.source !== 'Admin');
+
+        // Admin jobs first, then scraped jobs
+        const sortedAndGrouped = [...adminJobs, ...scrapedJobs];
 
         if (!cancelled) {
-          setJobs(merged);
-          setAdminCount(publishedAdminJobs.length);
-          setAiSearchCount(aiJobs.length);
+          setJobs(sortedAndGrouped);
+          setAdminCount(adminJobs.length);
+          setAiSearchCount(scrapedJobs.length);
         }
       } catch (err) {
         if (!cancelled) {
@@ -93,10 +78,16 @@ export function useAllJobsBrowse({ sortBy = 'latest' } = {}) {
     };
   }, []);
 
-  const sortedJobs = useMemo(() => sortJobs(jobs, sortBy), [jobs, sortBy]);
+  const finalSortedJobs = useMemo(() => {
+    // We already grouped Admin first, but if they want to sort by latest/oldest, 
+    // we should sort Admin and Scraped independently so Admin stays on top
+    const adminJobs = jobs.filter(job => job.source === 'Admin Portal' || job.source === 'Admin');
+    const scrapedJobs = jobs.filter(job => job.source !== 'Admin Portal' && job.source !== 'Admin');
+    return [...sortJobs(adminJobs, sortBy), ...sortJobs(scrapedJobs, sortBy)];
+  }, [jobs, sortBy]);
 
   return {
-    jobs: sortedJobs,
+    jobs: finalSortedJobs,
     adminCount,
     aiSearchCount,
     loading,

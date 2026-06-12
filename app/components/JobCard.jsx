@@ -3,7 +3,7 @@
 import React from 'react';
 import CompanyLogo from './CompanyLogo';
 
-export default function JobCard({ result, onApplyClick }) {
+const JobCard = React.memo(function JobCard({ result, onApplyClick }) {
   const { job = {}, score = 0, matchedSkills = [], missingSkills = [] } = result || {};
   const {
     title,
@@ -18,6 +18,20 @@ export default function JobCard({ result, onApplyClick }) {
     url,
   } = job;
 
+  const formatText = (text) => {
+    if (!text) return '';
+    return text
+      .replace(/[-_]/g, ' ')
+      .replace(/[^\w\s]/gi, '')
+      .split(/\s+/)
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ')
+      .trim();
+  };
+
+  const formattedTitle = formatText(title);
+  const formattedCompany = formatText(company);
+
   const displaySkills =
     matchedSkills.length > 0 || missingSkills.length > 0
       ? { matched: matchedSkills, missing: missingSkills }
@@ -29,7 +43,7 @@ export default function JobCard({ result, onApplyClick }) {
     <div className="bg-white border border-zinc-200/80 hover:shadow-md rounded-2xl p-5 flex flex-col gap-4 transition-all duration-300 relative font-sans">
       <div className="flex items-start justify-between">
         <div className="shrink-0">
-          <CompanyLogo logoUrl={logoUrl} company={company} logoColor={logoColor} />
+          <CompanyLogo logoUrl={logoUrl} company={formattedCompany} logoColor={logoColor} />
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
           {source && (
@@ -41,10 +55,12 @@ export default function JobCard({ result, onApplyClick }) {
                   ? 'bg-red-50 text-red-700 border-red-100'
                   : source === 'Indeed'
                   ? 'bg-sky-50 text-sky-700 border-sky-100'
+                  : source === 'Admin Portal' || source === 'Admin'
+                  ? 'bg-purple-50 text-purple-700 border-purple-200'
                   : 'bg-zinc-50 text-zinc-600 border-zinc-200'
               }`}
             >
-              {source}
+              {source === 'Admin Portal' || source === 'Admin' ? 'Admin Verified' : source}
             </span>
           )}
           {score > 0 && (
@@ -56,8 +72,16 @@ export default function JobCard({ result, onApplyClick }) {
       </div>
 
       <div>
-        {title && <h3 className="text-[15px] font-black text-zinc-900 leading-tight">{title}</h3>}
-        {company && <p className="text-[11px] text-[#008738] font-bold mt-0.5">{company}</p>}
+        {formattedTitle && <h3 className="text-[15px] font-black text-zinc-900 leading-tight">{formattedTitle}</h3>}
+        {formattedCompany && (
+          <div className="flex items-center gap-2 mt-0.5">
+            <p className="text-[11px] text-[#008738] font-bold">{formattedCompany}</p>
+            <span className="flex items-center gap-1 text-[9px] font-black text-[#16a34a] uppercase tracking-wider bg-emerald-50 px-1.5 py-0.5 rounded-sm">
+              <span className="w-1 h-1 rounded-full bg-[#16a34a] animate-pulse"></span>
+              Actively Hiring
+            </span>
+          </div>
+        )}
         {(location || postedTime) && (
           <p className="text-[11px] text-zinc-400 font-semibold mt-1 flex items-center gap-1.5">
             {location && <span>{location}</span>}
@@ -132,4 +156,6 @@ export default function JobCard({ result, onApplyClick }) {
       </div>
     </div>
   );
-}
+});
+
+export default JobCard;

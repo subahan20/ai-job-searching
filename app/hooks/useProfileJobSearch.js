@@ -36,6 +36,7 @@ export function useProfileJobSearch({ autoSearch = true } = {}) {
     () =>
       filterRecentJobs(jobs).map((job) => ({
         job,
+        score: job?.matchScore || job?.skillsMatchPercent || 0,
         matchedSkills: job?.skillsRequired || [],
       })),
     [jobs]
