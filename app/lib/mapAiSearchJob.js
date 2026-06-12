@@ -13,6 +13,8 @@ export const mapAiSearchJob = (row = {}) => {
     skillsSearched: row.skillsSearched || row.skills_searched || '',
     experienceSearched: row.experienceSearched ?? row.experience_searched ?? 0,
     locationSearched: row.locationSearched || row.location_searched || '',
+    matchScore: row.matchScore || row.match_score || 0,
+    skillsMatchPercent: row.skillsMatchPercent || row.skills_match_percent || 0,
   };
 
   const company = cleanJobField(row.company);

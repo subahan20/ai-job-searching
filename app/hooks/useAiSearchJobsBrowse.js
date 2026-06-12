@@ -19,6 +19,7 @@ export function useAiSearchJobsBrowse({ sortBy = 'latest' } = {}) {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -38,11 +39,13 @@ export function useAiSearchJobsBrowse({ sortBy = 'latest' } = {}) {
 
         if (!cancelled) {
           setJobs(filterRecentJobs(mapAiSearchResponse(data).jobs));
+          setUserRole(data.userRole || '');
         }
       } catch (err) {
         if (!cancelled) {
           setError(err?.message || 'Failed to load AI search jobs');
           setJobs([]);
+          setUserRole('');
         }
       } finally {
         if (!cancelled) {
@@ -60,5 +63,5 @@ export function useAiSearchJobsBrowse({ sortBy = 'latest' } = {}) {
 
   const sortedJobs = useMemo(() => sortJobs(jobs, sortBy), [jobs, sortBy]);
 
-  return { jobs: sortedJobs, loading, error };
+  return { jobs: sortedJobs, loading, error, userRole };
 }

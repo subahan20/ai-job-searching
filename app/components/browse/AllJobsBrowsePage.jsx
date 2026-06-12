@@ -6,7 +6,7 @@ import ApplyModal from '../ApplyModal';
 import JobGridCard from './JobGridCard';
 import { useAllJobsBrowse } from '../../hooks/useAllJobsBrowse';
 
-const JOBS_PER_PAGE = 25;
+const JOBS_PER_PAGE = 20;
 
 function Pagination({ currentPage, totalPages, onPage }) {
   return (
