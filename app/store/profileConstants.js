@@ -2,7 +2,7 @@ export const PROFILE_TABS = ['Profile Details', 'Education', 'Background Details
 
 export const NOTICE_PERIOD_OPTIONS = ['Immediate', '15 days', '30 days', '60 days', '90 days'];
 
-export const WORK_EXPERIENCE_OPTIONS = ['1 yr', '2 yr', '3 yr', '4 yr', '5 yr', '6+ yr'];
+export const WORK_EXPERIENCE_OPTIONS = ['0 yrs (Fresher)', '1 yr', '2 yr', '3 yr', '4 yr', '5 yr', '6+ yr'];
 
 export const PROFILE_FORM_FIELDS = [
   'first_name',
